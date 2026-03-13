@@ -26,7 +26,7 @@ func main() {
 		case "exit":
 			return
 		case "echo":
-			fmt.Println(cmdArgs)
+			fmt.Println(strings.Join(cmdArgs, " "))
 		case "type":
 			getCommandType(cmdArgs)
 		default:
