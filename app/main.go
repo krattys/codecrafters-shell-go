@@ -1,22 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"os"
 	"strings"
 )
 
 func main() {
-	fmt.Print("$ ")
 	reader := bufio.NewReader(os.Stdin)
-	text, err := reader.ReadString('\n')
+	for {
+		fmt.Print("$ ")
+		text, err := reader.ReadString('\n')
 
-	if err != nil {
-		fmt.Println(err)
-		return
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		cmd := strings.Fields(text)[0]
+		fmt.Printf("%s: command not found\n", cmd)
 	}
-
-	cmd := strings.Fields(text)[0]
-	fmt.Printf("%s: command not found\n", cmd)
 }
