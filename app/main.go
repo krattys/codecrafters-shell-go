@@ -48,7 +48,7 @@ func getCommandType(cmdArgs []string) {
 	} else if path, err := exec.LookPath(cmd); err == nil {
 		fmt.Printf("%s is %s\n", cmd, path)
 	} else {
-		fmt.Printf("%s: command not found\n", cmd)
+		fmt.Printf("%s: not found\n", cmd)
 	}
 }
 
