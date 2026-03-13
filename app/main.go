@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -44,8 +45,10 @@ func getCommandType(cmdArgs []string) {
 	isShellBuiltin := checkShellBuiltin(cmd)
 	if isShellBuiltin {
 		fmt.Printf("%s is a shell builtin\n", cmd)
+	} else if path, err := exec.LookPath(cmd); err == nil {
+		fmt.Printf("%s is %s\n", cmd, path)
 	} else {
-		fmt.Printf("%s: not found\n", cmd)
+		fmt.Printf("%s: command not found\n", cmd)
 	}
 }
 
