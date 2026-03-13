@@ -20,10 +20,12 @@ func main() {
 
 		text = strings.Trim(text, "\n")
 		cmdFields := strings.Fields(text)
-		cmd, _ := cmdFields[0], strings.Join(cmdFields[1:], " ")
+		cmd, cmdArgs := cmdFields[0], strings.Join(cmdFields[1:], " ")
 
 		if cmd == "exit" {
 			return
+		} else if cmd == "echo" {
+			fmt.Println(cmdArgs)
 		} else {
 			fmt.Printf("%s: command not found\n", cmd)
 		}
