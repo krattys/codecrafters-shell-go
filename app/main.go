@@ -36,11 +36,11 @@ func main() {
 }
 
 func getCommandType(cmdArgs []string) {
-	if (len(cmdArgs) < 2) {
+	if (len(cmdArgs) < 1) {
 		return
 	}
 
-	cmd := cmdArgs[1]
+	cmd := cmdArgs[0]
 	isShellBuiltin := checkShellBuiltin(cmd)
 	if isShellBuiltin {
 		fmt.Printf("%s is a shell builtin\n", cmd)
