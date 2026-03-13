@@ -15,10 +15,17 @@ func main() {
 
 		if err != nil {
 			fmt.Println(err)
-			return
+			os.Exit(1)
 		}
 
-		cmd := strings.Fields(text)[0]
-		fmt.Printf("%s: command not found\n", cmd)
+		text = strings.Trim(text, "\n")
+		cmdFields := strings.Fields(text)
+		cmd, _ := cmdFields[0], strings.Join(cmdFields[1:], " ")
+
+		if cmd == "exit" {
+			return
+		} else {
+			fmt.Printf("%s: command not found\n", cmd)
+		}
 	}
 }
