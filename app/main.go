@@ -20,7 +20,7 @@ func main() {
 
 		text = strings.Trim(text, "\n")
 		cmdFields := strings.Fields(text)
-		cmd, cmdArgs := cmdFields[0], strings.Join(cmdFields[1:], " ")
+		cmd, cmdArgs := cmdFields[0], cmdFields[1:]
 
 		switch cmd {
 		case "exit":
@@ -28,14 +28,19 @@ func main() {
 		case "echo":
 			fmt.Println(cmdArgs)
 		case "type":
-			getCommandType(cmd)
+			getCommandType(cmdArgs)
 		default:
 			fmt.Printf("%s: command not found\n", cmd)
 		}
 	}
 }
 
-func getCommandType(cmd string) {
+func getCommandType(cmdArgs []string) {
+	if (len(cmdArgs) < 2) {
+		return
+	}
+
+	cmd := cmdArgs[1]
 	isShellBuiltin := checkShellBuiltin(cmd)
 	if isShellBuiltin {
 		fmt.Printf("%s is a shell builtin\n", cmd)
