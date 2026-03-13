@@ -22,12 +22,28 @@ func main() {
 		cmdFields := strings.Fields(text)
 		cmd, cmdArgs := cmdFields[0], strings.Join(cmdFields[1:], " ")
 
-		if cmd == "exit" {
+		switch cmd {
+		case "exit":
 			return
-		} else if cmd == "echo" {
+		case "echo":
 			fmt.Println(cmdArgs)
-		} else {
+		case "type":
+			getCommandType(cmd)
+		default:
 			fmt.Printf("%s: command not found\n", cmd)
 		}
 	}
+}
+
+func getCommandType(cmd string) {
+	isShellBuiltin := checkShellBuiltin(cmd)
+	if isShellBuiltin {
+		fmt.Printf("%s is a shell builtin\n", cmd)
+	} else {
+		fmt.Printf("%s: not found\n", cmd)
+	}
+}
+
+func checkShellBuiltin(cmd string) bool {
+	return cmd == "echo" || cmd == "exit" || cmd == "type"
 }
