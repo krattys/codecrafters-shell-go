@@ -50,10 +50,10 @@ func main() {
 				fmt.Println()
 			}
 		default:
-			cmdType, cmdPath := getCommandTypeAndPath(cmd)
+			cmdType, _ := getCommandTypeAndPath(cmd)
 			switch cmdType {
 			case ExternalCommand:
-				cmdExec := exec.Command(cmdPath, cmdArgs...)
+				cmdExec := exec.Command(cmd, cmdArgs...)
 				cmdExec.Stdout = os.Stdout
 				cmdExec.Stderr = os.Stderr
 				err := cmdExec.Run()
