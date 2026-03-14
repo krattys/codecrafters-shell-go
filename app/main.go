@@ -8,6 +8,15 @@ import (
 	"strings"
 )
 
+const (
+	ShellBuiltin CommandType = iota
+	ExternalCommand
+	CommandNotFound
+	EmptyCommand
+)
+
+type CommandType int
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -29,27 +38,47 @@ func main() {
 		case "echo":
 			fmt.Println(strings.Join(cmdArgs, " "))
 		case "type":
-			getCommandType(cmdArgs)
+			cmdType, cmdPath := getCommandTypeAndPath(cmdArgs[0])
+			switch cmdType {
+			case ShellBuiltin:
+				fmt.Printf("%s is a shell builtin\n", cmdArgs[0])
+			case ExternalCommand:
+				fmt.Printf("%s is %s\n", cmdArgs[0], cmdPath)
+			case CommandNotFound:
+				fmt.Printf("%s: not found\n", cmdArgs[0])
+			default:
+				fmt.Println()
+			}
 		default:
-			fmt.Printf("%s: command not found\n", cmd)
+			cmdType, cmdPath := getCommandTypeAndPath(cmd)
+			switch cmdType {
+			case ExternalCommand:
+				cmdExec := exec.Command(cmdPath, cmdArgs...)
+				cmdExec.Stdout = os.Stdout
+				cmdExec.Stderr = os.Stderr
+				err := cmdExec.Run()
+				if err != nil {
+					fmt.Println(err)
+				}
+				case CommandNotFound:
+					fmt.Printf("%s: command not found\n", cmd)
+			}
 		}
 	}
 }
 
-func getCommandType(cmdArgs []string) {
-	if (len(cmdArgs) < 1) {
-		return
+func getCommandTypeAndPath(cmd string) (CommandType, string) {
+	if cmd == "" {
+		return EmptyCommand, ""
 	}
-
-	cmd := cmdArgs[0]
 	isShellBuiltin := checkShellBuiltin(cmd)
 	if isShellBuiltin {
-		fmt.Printf("%s is a shell builtin\n", cmd)
-	} else if path, err := exec.LookPath(cmd); err == nil {
-		fmt.Printf("%s is %s\n", cmd, path)
-	} else {
-		fmt.Printf("%s: not found\n", cmd)
+		return ShellBuiltin, ""
 	}
+	if path, err := exec.LookPath(cmd); err == nil {
+		return ExternalCommand, path
+	}
+	return CommandNotFound, ""
 }
 
 func checkShellBuiltin(cmd string) bool {
